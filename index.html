@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐟 Cửa Hàng Cá An Nam - Bán Hàng</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0077b6;
+            --primary-dark: #023e8a;
+            --success: #06d6a0;
+            --danger: #ef476f;
+            --warning: #ffd166;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --gradient: linear-gradient(135deg, #0077b6 0%, #00b4d8 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f0e17 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        /* Login Styles */
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: radial-gradient(circle at 50% 50%, #0077b620 0%, transparent 70%);
+        }
+
+        .login-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .fish-icon {
+            font-size: 60px;
+            animation: swim 2s ease-in-out infinite;
+        }
+
+        @keyframes swim {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            50% { transform: translateX(10px) rotate(5deg); }
+        }
+
+        .login-title {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 15px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.4);
+            font-size: 18px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            background: rgba(255,255,255,0.08);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #00b4d8;
+            background: rgba(255,255,255,0.12);
+            box-shadow: 0 0 0 4px rgba(0,180,216,0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: var(--gradient);
+            border: none;
+            border-radius: 16px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,119,182,0.4);
+        }
+
+        .admin-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .admin-link a {
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .admin-link a:hover {
+            color: #00b4d8;
+        }
+
+        .toast-error {
+            background: var(--danger);
+            color: #fff;
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 15px;
+            display: none;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Sales Interface */
+        .sales-container {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .btn-logout {
+            padding: 10px 20px;
+            background: var(--danger);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #d64161;
+            transform: scale(1.05);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+            padding: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .products-section {
+            background: rgba(255,255,255,0.03);
+            border-radius: 24px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: #00b4d8;
+            box-shadow: 0 15px 40px rgba(0,180,216,0.2);
+        }
+
+        .product-card:active {
+            transform: scale(0.95);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .product-name {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            color: #00b4d8;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .product-unit {
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+        }
+
+        .stock-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .stock-low {
+            color: #ffd166;
+        }
+
+        .stock-out {
+            color: #ef476f;
+        }
+
+        /* Cart Section */
+        .cart-section {
+            background: rgba(255,255,255,0.03);
+            border-radius: 24px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .cart-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 12px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .item-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .item-price {
+            color: #00b4d8;
+            font-size: 14px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .qty-btn:hover {
+            background: #00b4d8;
+            border-color: #00b4d8;
+        }
+
+        .qty-num {
+            font-weight: 700;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .btn-remove {
+            color: #ef476f;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px;
+        }
+
+        .cart-total {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .total-amount {
+            font-size: 32px;
+            font-weight: 800;
+            color: #00b4d8;
+            text-align: right;
+        }
+
+        .payment-methods {
+            margin-top: 25px;
+            display: grid;
+            gap: 15px;
+        }
+
+        .payment-btn {
+            padding: 15px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .payment-btn:hover {
+            border-color: #00b4d8;
+            background: rgba(0,180,216,0.1);
+        }
+
+        .payment-btn.active {
+            border-color: #00b4d8;
+            background: rgba(0,180,216,0.2);
+        }
+
+        .action-buttons {
+            margin-top: 25px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .btn-action {
+            padding: 16px;
+            border: none;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn-print {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .btn-send {
+            background: var(--gradient);
+            color: #fff;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        /* Modal QR */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a1a2e;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .modal-content img {
+            width: 100%;
+            border-radius: 16px;
+            margin: 20px 0;
+        }
+
+        .btn-close-modal {
+            padding: 12px 30px;
+            background: var(--danger);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        /* Cash Modal */
+        .cash-input {
+            font-size: 24px;
+            padding: 16px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            color: #fff;
+            width: 100%;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .change-amount {
+            font-size: 36px;
+            font-weight: 800;
+            color: #06d6a0;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .cart-section {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-wrapper">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="fish-icon">🐟</div>
+                <h1 class="login-title">CỬA HÀNG CÁ AN NAM</h1>
+                <p style="color: rgba(255,255,255,0.6); margin-top: 10px;">Đăng nhập để bắt đầu bán hàng</p>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="username" class="input-field" placeholder="Tên đăng nhập">
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" class="input-field" placeholder="Mật khẩu">
+            </div>
+            
+            <button class="btn-login" onclick="login()">
+                <i class="fas fa-sign-in-alt"></i> ĐĂNG NHẬP
+            </button>
+            
+            <div id="loginError" class="toast-error"></div>
+            
+            <div class="admin-link">
+                <a href="admin.html">🔐 Đăng nhập Admin</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sales Screen -->
+    <div id="salesScreen" class="sales-container">
+        <div class="top-bar">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">N</div>
+                <div>
+                    <div style="font-weight: 700; font-size: 18px;" id="userNameDisplay"></div>
+                    <div style="color: rgba(255,255,255,0.5); font-size: 13px;">Nhân viên bán hàng</div>
+                </div>
+            </div>
+            <button class="btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            </button>
+        </div>
+
+        <div class="main-content">
+            <!-- Products -->
+            <div class="products-section">
+                <h2 class="section-title">
+                    <i class="fas fa-fish"></i> Sản phẩm
+                </h2>
+                <div class="products-grid" id="productsGrid"></div>
+            </div>
+
+            <!-- Cart -->
+            <div class="cart-section">
+                <h2 class="section-title">
+                    <i class="fas fa-shopping-cart"></i> Giỏ hàng
+                </h2>
+                <div id="cartItems"></div>
+                
+                <div class="cart-total">
+                    <div style="color: rgba(255,255,255,0.5); font-size: 14px;">Tổng tiền:</div>
+                    <div class="total-amount" id="totalAmount">0đ</div>
+                </div>
+
+                <div class="payment-methods">
+                    <button class="payment-btn active" id="btnCash" onclick="selectPayment('cash')">
+                        <i class="fas fa-money-bill-wave"></i> Tiền mặt
+                    </button>
+                    <button class="payment-btn" id="btnViettel" onclick="selectPayment('viettel')">
+                        <i class="fas fa-qrcode"></i> ViettelMoney
+                    </button>
+                    <button class="payment-btn" id="btnBIDV" onclick="selectPayment('bidv')">
+                        <i class="fas fa-university"></i> BIDV
+                    </button>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-action btn-print" onclick="printInvoice()">
+                        <i class="fas fa-print"></i> In
+                    </button>
+                    <button class="btn-action btn-send" onclick="sendInvoice()">
+                        <i class="fas fa-paper-plane"></i> Gửi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Modal -->
+    <div id="qrModal" class="modal">
+        <div class="modal-content">
+            <h3 id="qrTitle">Quét mã QR</h3>
+            <img id="qrImage" src="" alt="QR Code">
+            <p style="color: #06d6a0; font-size: 20px; font-weight: 700;" id="qrAmount"></p>
+            <button class="btn-close-modal" onclick="closeQR()">Đóng</button>
+        </div>
+    </div>
+
+    <!-- Cash Modal -->
+    <div id="cashModal" class="modal">
+        <div class="modal-content">
+            <h3>💵 Thanh toán tiền mặt</h3>
+            <p style="color: rgba(255,255,255,0.6);">Tổng tiền: <span id="cashTotal" style="color: #00b4d8; font-weight: 700;"></span></p>
+            <input type="number" id="cashReceived" class="cash-input" placeholder="Nhập số tiền khách đưa" oninput="calculateChange()">
+            <div class="change-amount" id="changeAmount">Tiền thừa: 0đ</div>
+            <button class="btn-action btn-send" style="width: 100%; margin-top: 15px;" onclick="confirmCashPayment()">
+                ✅ Xác nhận thanh toán
+            </button>
+            <button class="btn-close-modal" onclick="closeCash()" style="margin-top: 10px;">Hủy</button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
